@@ -151,23 +151,23 @@ st.markdown("""
         margin-bottom: 20px !important;
     }
     
-    /* Form button styling */
-    .stButton > button[kind="primary"] {
+    .form-container {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Override dashboard button styling for form pages */
+    .form-container .stButton > button {
         background: linear-gradient(135deg, #667eea, #764ba2) !important;
         color: white !important;
         border: none !important;
         border-radius: 8px !important;
-    }
-    
-    /* Regular button styling for form navigation */
-    .stButton > button {
-        border-radius: 8px !important;
-        transition: all 0.2s ease !important;
-    }
-    
-    .stButton > button:hover {
-        transform: translateY(-2px) !important;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+        padding: 0.5rem 1rem !important;
+        min-height: auto !important;
+        margin-bottom: 0 !important;
+        text-align: center !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -177,7 +177,7 @@ if 'current_page' not in st.session_state:
     st.session_state.current_page = 'dashboard'
 
 def show_dashboard():
-    """Display the main dashboard with large process cards"""
+    """Display the main dashboard with large clickable process cards"""
     
     # Header
     st.markdown("""
@@ -187,135 +187,170 @@ def show_dashboard():
     </div>
     """, unsafe_allow_html=True)
     
-    # Create larger cards using containers and HTML
+    # Custom CSS for dashboard buttons only
+    st.markdown("""
+    <style>
+    .stButton > button {
+        background: white !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 15px !important;
+        padding: 2rem !important;
+        min-height: 200px !important;
+        width: 100% !important;
+        text-align: left !important;
+        transition: all 0.3s ease !important;
+        cursor: pointer !important;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1) !important;
+        margin-bottom: 2rem !important;
+        color: inherit !important;
+    }
+    
+    .stButton > button:hover {
+        transform: translateY(-4px) !important;
+        box-shadow: 0 12px 20px rgba(0,0,0,0.15) !important;
+        border-color: #667eea !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)), unsafe_allow_html=True)
+    
+    # Create larger clickable cards
     col1, col2, col3 = st.columns(3, gap="large")
     
     # Row 1
     with col1:
-        card_html = """
-        <div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; margin-bottom: 2rem; min-height: 200px; cursor: pointer; transition: all 0.3s;">
+        if st.button("""
+        <div style="display: flex; flex-direction: column; align-items: flex-start; text-align: left;">
             <div style="width: 60px; height: 60px; border-radius: 12px; background: linear-gradient(135deg, #667eea, #764ba2); display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px; color: white;">👤</div>
-            <h3 style="font-size: 1.4rem; font-weight: 600; color: #2d3748; margin-bottom: 10px;">New Hire</h3>
-            <p style="color: #718096; font-size: 1rem; line-height: 1.6; margin-bottom: 20px;">Streamline employee onboarding with automated workflows and document collection.</p>
+            <h3 style="font-size: 1.4rem; font-weight: 600; color: #2d3748; margin-bottom: 10px; margin-top: 0;">New Hire</h3>
+            <p style="color: #718096; font-size: 1rem; line-height: 1.6; margin-bottom: 20px; margin-top: 0;">Streamline employee onboarding with automated workflows and document collection.</p>
             <span style="padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; background: #c6f6d5; color: #22543d;">ACTIVE</span>
         </div>
-        """
-        st.markdown(card_html, unsafe_allow_html=True)
-        if st.button("Open New Hire Form", key="new_hire", use_container_width=True):
+        """, 
+        key="new_hire", 
+        help="Click to open New Hire form",
+        use_container_width=True):
             st.session_state.current_page = 'new_hire'
             st.rerun()
     
     with col2:
-        card_html = """
-        <div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; margin-bottom: 2rem; min-height: 200px; cursor: pointer; transition: all 0.3s;">
+        if st.button("""
+        <div style="display: flex; flex-direction: column; align-items: flex-start; text-align: left;">
             <div style="width: 60px; height: 60px; border-radius: 12px; background: linear-gradient(135deg, #48bb78, #38a169); display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px; color: white;">🏢</div>
-            <h3 style="font-size: 1.4rem; font-weight: 600; color: #2d3748; margin-bottom: 10px;">Customer Creation</h3>
-            <p style="color: #718096; font-size: 1rem; line-height: 1.6; margin-bottom: 20px;">Register new customers with comprehensive profile setup and verification.</p>
+            <h3 style="font-size: 1.4rem; font-weight: 600; color: #2d3748; margin-bottom: 10px; margin-top: 0;">Customer Creation</h3>
+            <p style="color: #718096; font-size: 1rem; line-height: 1.6; margin-bottom: 20px; margin-top: 0;">Register new customers with comprehensive profile setup and verification.</p>
             <span style="padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; background: #c6f6d5; color: #22543d;">ACTIVE</span>
         </div>
-        """
-        st.markdown(card_html, unsafe_allow_html=True)
-        if st.button("Open Customer Creation Form", key="customer_creation", use_container_width=True):
+        """, 
+        key="customer_creation", 
+        help="Click to open Customer Creation form",
+        use_container_width=True):
             st.session_state.current_page = 'customer_creation'
             st.rerun()
     
     with col3:
-        card_html = """
-        <div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; margin-bottom: 2rem; min-height: 200px; cursor: pointer; transition: all 0.3s;">
+        if st.button("""
+        <div style="display: flex; flex-direction: column; align-items: flex-start; text-align: left;">
             <div style="width: 60px; height: 60px; border-radius: 12px; background: linear-gradient(135deg, #9f7aea, #805ad5); display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px; color: white;">📋</div>
-            <h3 style="font-size: 1.4rem; font-weight: 600; color: #2d3748; margin-bottom: 10px;">PO Request</h3>
-            <p style="color: #718096; font-size: 1rem; line-height: 1.6; margin-bottom: 20px;">Submit and track purchase order requests with approval workflow.</p>
+            <h3 style="font-size: 1.4rem; font-weight: 600; color: #2d3748; margin-bottom: 10px; margin-top: 0;">PO Request</h3>
+            <p style="color: #718096; font-size: 1rem; line-height: 1.6; margin-bottom: 20px; margin-top: 0;">Submit and track purchase order requests with approval workflow.</p>
             <span style="padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; background: #c6f6d5; color: #22543d;">ACTIVE</span>
         </div>
-        """
-        st.markdown(card_html, unsafe_allow_html=True)
-        if st.button("Open PO Request Form", key="po_request", use_container_width=True):
+        """, 
+        key="po_request", 
+        help="Click to open PO Request form",
+        use_container_width=True):
             st.session_state.current_page = 'po_request'
             st.rerun()
     
     # Row 2
     with col1:
-        card_html = """
-        <div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; margin-bottom: 2rem; min-height: 200px; cursor: pointer; transition: all 0.3s;">
+        if st.button("""
+        <div style="display: flex; flex-direction: column; align-items: flex-start; text-align: left;">
             <div style="width: 60px; height: 60px; border-radius: 12px; background: linear-gradient(135deg, #ed8936, #dd6b20); display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px; color: white;">💰</div>
-            <h3 style="font-size: 1.4rem; font-weight: 600; color: #2d3748; margin-bottom: 10px;">Invoice Processing</h3>
-            <p style="color: #718096; font-size: 1rem; line-height: 1.6; margin-bottom: 20px;">Automate invoice validation, approval, and payment processing.</p>
+            <h3 style="font-size: 1.4rem; font-weight: 600; color: #2d3748; margin-bottom: 10px; margin-top: 0;">Invoice Processing</h3>
+            <p style="color: #718096; font-size: 1rem; line-height: 1.6; margin-bottom: 20px; margin-top: 0;">Automate invoice validation, approval, and payment processing.</p>
             <span style="padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; background: #fed7d7; color: #742a2a;">BETA</span>
         </div>
-        """
-        st.markdown(card_html, unsafe_allow_html=True)
-        if st.button("Open Invoice Processing Form", key="invoice_processing", use_container_width=True):
+        """, 
+        key="invoice_processing", 
+        help="Click to open Invoice Processing form",
+        use_container_width=True):
             st.session_state.current_page = 'invoice_processing'
             st.rerun()
     
     with col2:
-        card_html = """
-        <div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; margin-bottom: 2rem; min-height: 200px; cursor: pointer; transition: all 0.3s;">
+        if st.button("""
+        <div style="display: flex; flex-direction: column; align-items: flex-start; text-align: left;">
             <div style="width: 60px; height: 60px; border-radius: 12px; background: linear-gradient(135deg, #4fd1c7, #38b2ac); display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px; color: white;">💳</div>
-            <h3 style="font-size: 1.4rem; font-weight: 600; color: #2d3748; margin-bottom: 10px;">Expense Report</h3>
-            <p style="color: #718096; font-size: 1rem; line-height: 1.6; margin-bottom: 20px;">Submit and manage expense claims with receipt attachment and approval flow.</p>
+            <h3 style="font-size: 1.4rem; font-weight: 600; color: #2d3748; margin-bottom: 10px; margin-top: 0;">Expense Report</h3>
+            <p style="color: #718096; font-size: 1rem; line-height: 1.6; margin-bottom: 20px; margin-top: 0;">Submit and manage expense claims with receipt attachment and approval flow.</p>
             <span style="padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; background: #c6f6d5; color: #22543d;">ACTIVE</span>
         </div>
-        """
-        st.markdown(card_html, unsafe_allow_html=True)
-        if st.button("Open Expense Report Form", key="expense_report", use_container_width=True):
+        """, 
+        key="expense_report", 
+        help="Click to open Expense Report form",
+        use_container_width=True):
             st.session_state.current_page = 'expense_report'
             st.rerun()
     
     with col3:
-        card_html = """
-        <div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; margin-bottom: 2rem; min-height: 200px; cursor: pointer; transition: all 0.3s;">
+        if st.button("""
+        <div style="display: flex; flex-direction: column; align-items: flex-start; text-align: left;">
             <div style="width: 60px; height: 60px; border-radius: 12px; background: linear-gradient(135deg, #f56565, #e53e3e); display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px; color: white;">🏖️</div>
-            <h3 style="font-size: 1.4rem; font-weight: 600; color: #2d3748; margin-bottom: 10px;">Leave Request</h3>
-            <p style="color: #718096; font-size: 1rem; line-height: 1.6; margin-bottom: 20px;">Request time off with calendar integration and manager approval workflow.</p>
+            <h3 style="font-size: 1.4rem; font-weight: 600; color: #2d3748; margin-bottom: 10px; margin-top: 0;">Leave Request</h3>
+            <p style="color: #718096; font-size: 1rem; line-height: 1.6; margin-bottom: 20px; margin-top: 0;">Request time off with calendar integration and manager approval workflow.</p>
             <span style="padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; background: #c6f6d5; color: #22543d;">ACTIVE</span>
         </div>
-        """
-        st.markdown(card_html, unsafe_allow_html=True)
-        if st.button("Open Leave Request Form", key="leave_request", use_container_width=True):
+        """, 
+        key="leave_request", 
+        help="Click to open Leave Request form",
+        use_container_width=True):
             st.session_state.current_page = 'leave_request'
             st.rerun()
     
     # Row 3
     with col1:
-        card_html = """
-        <div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; margin-bottom: 2rem; min-height: 200px; cursor: pointer; transition: all 0.3s;">
+        if st.button("""
+        <div style="display: flex; flex-direction: column; align-items: flex-start; text-align: left;">
             <div style="width: 60px; height: 60px; border-radius: 12px; background: linear-gradient(135deg, #667eea, #764ba2); display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px; color: white;">🖥️</div>
-            <h3 style="font-size: 1.4rem; font-weight: 600; color: #2d3748; margin-bottom: 10px;">Asset Management</h3>
-            <p style="color: #718096; font-size: 1rem; line-height: 1.6; margin-bottom: 20px;">Track and manage company assets with assignment and maintenance schedules.</p>
+            <h3 style="font-size: 1.4rem; font-weight: 600; color: #2d3748; margin-bottom: 10px; margin-top: 0;">Asset Management</h3>
+            <p style="color: #718096; font-size: 1rem; line-height: 1.6; margin-bottom: 20px; margin-top: 0;">Track and manage company assets with assignment and maintenance schedules.</p>
             <span style="padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; background: #bee3f8; color: #2a4365;">NEW</span>
         </div>
-        """
-        st.markdown(card_html, unsafe_allow_html=True)
-        if st.button("Open Asset Management Form", key="asset_management", use_container_width=True):
+        """, 
+        key="asset_management", 
+        help="Click to open Asset Management form",
+        use_container_width=True):
             st.session_state.current_page = 'asset_management'
             st.rerun()
     
     with col2:
-        card_html = """
-        <div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; margin-bottom: 2rem; min-height: 200px; cursor: pointer; transition: all 0.3s;">
+        if st.button("""
+        <div style="display: flex; flex-direction: column; align-items: flex-start; text-align: left;">
             <div style="width: 60px; height: 60px; border-radius: 12px; background: linear-gradient(135deg, #48bb78, #38a169); display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px; color: white;">📄</div>
-            <h3 style="font-size: 1.4rem; font-weight: 600; color: #2d3748; margin-bottom: 10px;">Contract Review</h3>
-            <p style="color: #718096; font-size: 1rem; line-height: 1.6; margin-bottom: 20px;">Submit contracts for legal review with collaborative editing and approval.</p>
+            <h3 style="font-size: 1.4rem; font-weight: 600; color: #2d3748; margin-bottom: 10px; margin-top: 0;">Contract Review</h3>
+            <p style="color: #718096; font-size: 1rem; line-height: 1.6; margin-bottom: 20px; margin-top: 0;">Submit contracts for legal review with collaborative editing and approval.</p>
             <span style="padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; background: #fed7d7; color: #742a2a;">BETA</span>
         </div>
-        """
-        st.markdown(card_html, unsafe_allow_html=True)
-        if st.button("Open Contract Review Form", key="contract_review", use_container_width=True):
+        """, 
+        key="contract_review", 
+        help="Click to open Contract Review form",
+        use_container_width=True):
             st.session_state.current_page = 'contract_review'
             st.rerun()
     
     with col3:
-        card_html = """
-        <div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; margin-bottom: 2rem; min-height: 200px; cursor: pointer; transition: all 0.3s;">
+        if st.button("""
+        <div style="display: flex; flex-direction: column; align-items: flex-start; text-align: left;">
             <div style="width: 60px; height: 60px; border-radius: 12px; background: linear-gradient(135deg, #9f7aea, #805ad5); display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px; color: white;">⭐</div>
-            <h3 style="font-size: 1.4rem; font-weight: 600; color: #2d3748; margin-bottom: 10px;">Performance Review</h3>
-            <p style="color: #718096; font-size: 1rem; line-height: 1.6; margin-bottom: 20px;">Conduct employee performance evaluations with 360-degree feedback collection.</p>
+            <h3 style="font-size: 1.4rem; font-weight: 600; color: #2d3748; margin-bottom: 10px; margin-top: 0;">Performance Review</h3>
+            <p style="color: #718096; font-size: 1rem; line-height: 1.6; margin-bottom: 20px; margin-top: 0;">Conduct employee performance evaluations with 360-degree feedback collection.</p>
             <span style="padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; background: #bee3f8; color: #2a4365;">NEW</span>
         </div>
-        """
-        st.markdown(card_html, unsafe_allow_html=True)
-        if st.button("Open Performance Review Form", key="performance_review", use_container_width=True):
+        """, 
+        key="performance_review", 
+        help="Click to open Performance Review form",
+        use_container_width=True):
             st.session_state.current_page = 'performance_review'
             st.rerun()
 
@@ -430,9 +465,11 @@ def show_po_request_form():
     """PO Request process form"""
     st.markdown("## 📋 Purchase Order Request")
     
-    if st.button("← Back to Dashboard", key="back_po"):
-        st.session_state.current_page = 'dashboard'
-        st.rerun()
+    col1, col2 = st.columns([1, 6])
+    with col1:
+        if st.button("← Back", key="back_po", help="Return to Dashboard"):
+            st.session_state.current_page = 'dashboard'
+            st.rerun()
     
     with st.form("po_request_form"):
         col1, col2 = st.columns(2)
@@ -453,14 +490,18 @@ def show_po_request_form():
         item_description = st.text_area("Item Description *", key="po_description")
         justification = st.text_area("Justification *", key="po_justification")
         
-        st.subheader("Attachments")
+        st.markdown("### 📎 Attachments")
         col1, col2 = st.columns(2)
         with col1:
             quotation = st.file_uploader("Quotation", type=['pdf', 'doc', 'docx'], key="po_quotation")
         with col2:
             tech_spec = st.file_uploader("Technical Specification", type=['pdf', 'doc', 'docx'], key="po_spec")
         
-        submitted = st.form_submit_button("Submit PO Request", type="primary")
+        col1, col2 = st.columns([1, 1])
+        with col1:
+            draft_button = st.form_submit_button("💾 Save Draft", use_container_width=True)
+        with col2:
+            submitted = st.form_submit_button("🚀 Submit Request", type="primary", use_container_width=True)
         
         if submitted:
             if all([requestor_name, department, supplier_name, quantity, unit_price, delivery_date, budget_code, item_description, justification]):
@@ -468,14 +509,19 @@ def show_po_request_form():
                 st.balloons()
             else:
                 st.error("❌ Please fill in all required fields marked with *")
+        
+        if draft_button:
+            st.info("💾 Draft saved successfully!"))
 
 def show_invoice_processing_form():
     """Invoice Processing form"""
     st.markdown("## 💰 Invoice Processing")
     
-    if st.button("← Back to Dashboard", key="back_invoice"):
-        st.session_state.current_page = 'dashboard'
-        st.rerun()
+    col1, col2 = st.columns([1, 6])
+    with col1:
+        if st.button("← Back", key="back_invoice", help="Return to Dashboard"):
+            st.session_state.current_page = 'dashboard'
+            st.rerun()
     
     with st.form("invoice_processing_form"):
         col1, col2 = st.columns(2)
@@ -493,14 +539,18 @@ def show_invoice_processing_form():
             po_reference = st.text_input("PO Reference", key="inv_po_ref")
             gl_account = st.text_input("Cost Center / GL Account *", key="inv_gl")
         
-        st.subheader("Attachments")
+        st.markdown("### 📎 Attachments")
         col1, col2 = st.columns(2)
         with col1:
             invoice_pdf = st.file_uploader("Invoice PDF *", type=['pdf'], key="inv_pdf")
         with col2:
             delivery_note = st.file_uploader("Delivery Note", type=['pdf', 'jpg', 'png'], key="inv_delivery")
         
-        submitted = st.form_submit_button("Submit Invoice", type="primary")
+        col1, col2 = st.columns([1, 1])
+        with col1:
+            draft_button = st.form_submit_button("💾 Save Draft", use_container_width=True)
+        with col2:
+            submitted = st.form_submit_button("🚀 Submit Invoice", type="primary", use_container_width=True)
         
         if submitted:
             if all([supplier_name, invoice_number, invoice_date, amount, currency, gl_account]):
@@ -508,14 +558,19 @@ def show_invoice_processing_form():
                 st.balloons()
             else:
                 st.error("❌ Please fill in all required fields marked with *")
+        
+        if draft_button:
+            st.info("💾 Draft saved successfully!")
 
 def show_expense_report_form():
     """Expense Report form"""
     st.markdown("## 💳 Expense Report")
     
-    if st.button("← Back to Dashboard", key="back_expense"):
-        st.session_state.current_page = 'dashboard'
-        st.rerun()
+    col1, col2 = st.columns([1, 6])
+    with col1:
+        if st.button("← Back", key="back_expense", help="Return to Dashboard"):
+            st.session_state.current_page = 'dashboard'
+            st.rerun()
     
     with st.form("expense_report_form"):
         col1, col2 = st.columns(2)
@@ -534,10 +589,14 @@ def show_expense_report_form():
         
         description = st.text_area("Description *", key="exp_description")
         
-        st.subheader("Receipt")
+        st.markdown("### 📎 Receipt")
         receipt = st.file_uploader("Upload Receipt *", type=['pdf', 'jpg', 'png'], key="exp_receipt")
         
-        submitted = st.form_submit_button("Submit Expense Report", type="primary")
+        col1, col2 = st.columns([1, 1])
+        with col1:
+            draft_button = st.form_submit_button("💾 Save Draft", use_container_width=True)
+        with col2:
+            submitted = st.form_submit_button("🚀 Submit Report", type="primary", use_container_width=True)
         
         if submitted:
             if all([employee_name, employee_id, expense_type, expense_date, amount, cost_center, description]):
@@ -545,14 +604,19 @@ def show_expense_report_form():
                 st.balloons()
             else:
                 st.error("❌ Please fill in all required fields marked with *")
+        
+        if draft_button:
+            st.info("💾 Draft saved successfully!")
 
 def show_leave_request_form():
     """Leave Request form"""
     st.markdown("## 🏖️ Leave Request")
     
-    if st.button("← Back to Dashboard", key="back_leave"):
-        st.session_state.current_page = 'dashboard'
-        st.rerun()
+    col1, col2 = st.columns([1, 6])
+    with col1:
+        if st.button("← Back", key="back_leave", help="Return to Dashboard"):
+            st.session_state.current_page = 'dashboard'
+            st.rerun()
     
     with st.form("leave_request_form"):
         col1, col2 = st.columns(2)
@@ -572,7 +636,11 @@ def show_leave_request_form():
         
         reason = st.text_area("Reason for Leave *", key="leave_reason")
         
-        submitted = st.form_submit_button("Submit Leave Request", type="primary")
+        col1, col2 = st.columns([1, 1])
+        with col1:
+            draft_button = st.form_submit_button("💾 Save Draft", use_container_width=True)
+        with col2:
+            submitted = st.form_submit_button("🚀 Submit Request", type="primary", use_container_width=True)
         
         if submitted:
             if all([employee_name, employee_id, leave_type, start_date, end_date, backup_person, reason]):
@@ -580,14 +648,19 @@ def show_leave_request_form():
                 st.balloons()
             else:
                 st.error("❌ Please fill in all required fields marked with *")
+        
+        if draft_button:
+            st.info("💾 Draft saved successfully!")
 
 def show_asset_management_form():
     """Asset Management form"""
     st.markdown("## 🖥️ Asset Management")
     
-    if st.button("← Back to Dashboard", key="back_asset"):
-        st.session_state.current_page = 'dashboard'
-        st.rerun()
+    col1, col2 = st.columns([1, 6])
+    with col1:
+        if st.button("← Back", key="back_asset", help="Return to Dashboard"):
+            st.session_state.current_page = 'dashboard'
+            st.rerun()
     
     with st.form("asset_management_form"):
         col1, col2 = st.columns(2)
@@ -608,10 +681,14 @@ def show_asset_management_form():
         
         justification = st.text_area("Purpose / Justification *", key="asset_justification")
         
-        st.subheader("Attachments")
+        st.markdown("### 📎 Attachments")
         request_form = st.file_uploader("Request Form (Optional)", type=['pdf', 'doc', 'docx'], key="asset_form")
         
-        submitted = st.form_submit_button("Submit Asset Request", type="primary")
+        col1, col2 = st.columns([1, 1])
+        with col1:
+            draft_button = st.form_submit_button("💾 Save Draft", use_container_width=True)
+        with col2:
+            submitted = st.form_submit_button("🚀 Submit Request", type="primary", use_container_width=True)
         
         if submitted:
             if all([asset_type, requestor_name, quantity, department, delivery_date, justification]):
@@ -619,14 +696,19 @@ def show_asset_management_form():
                 st.balloons()
             else:
                 st.error("❌ Please fill in all required fields marked with *")
+        
+        if draft_button:
+            st.info("💾 Draft saved successfully!")
 
 def show_contract_review_form():
     """Contract Review form"""
     st.markdown("## 📄 Contract Review")
     
-    if st.button("← Back to Dashboard", key="back_contract"):
-        st.session_state.current_page = 'dashboard'
-        st.rerun()
+    col1, col2 = st.columns([1, 6])
+    with col1:
+        if st.button("← Back", key="back_contract", help="Return to Dashboard"):
+            st.session_state.current_page = 'dashboard'
+            st.rerun()
     
     with st.form("contract_review_form"):
         col1, col2 = st.columns(2)
@@ -649,10 +731,14 @@ def show_contract_review_form():
         
         parties_involved = st.text_area("Parties Involved *", key="contract_parties")
         
-        st.subheader("Attachments")
+        st.markdown("### 📎 Attachments")
         draft_contract = st.file_uploader("Upload Draft Contract *", type=['pdf', 'doc', 'docx'], key="contract_draft")
         
-        submitted = st.form_submit_button("Submit Contract Review", type="primary")
+        col1, col2 = st.columns([1, 1])
+        with col1:
+            draft_button = st.form_submit_button("💾 Save Draft", use_container_width=True)
+        with col2:
+            submitted = st.form_submit_button("🚀 Submit Review", type="primary", use_container_width=True)
         
         if submitted:
             if all([contract_title, initiator_name, business_unit, legal_contact, start_date, end_date, contract_type, parties_involved]):
@@ -660,14 +746,19 @@ def show_contract_review_form():
                 st.balloons()
             else:
                 st.error("❌ Please fill in all required fields marked with *")
+        
+        if draft_button:
+            st.info("💾 Draft saved successfully!")
 
 def show_performance_review_form():
     """Performance Review form"""
     st.markdown("## ⭐ Performance Review")
     
-    if st.button("← Back to Dashboard", key="back_performance"):
-        st.session_state.current_page = 'dashboard'
-        st.rerun()
+    col1, col2 = st.columns([1, 6])
+    with col1:
+        if st.button("← Back", key="back_performance", help="Return to Dashboard"):
+            st.session_state.current_page = 'dashboard'
+            st.rerun()
     
     with st.form("performance_review_form"):
         col1, col2 = st.columns(2)
@@ -690,7 +781,11 @@ def show_performance_review_form():
         improvements = st.text_area("Areas for Improvement *", key="perf_improvements")
         feedback_360 = st.text_area("360 Feedback (Optional)", key="perf_360")
         
-        submitted = st.form_submit_button("Submit Performance Review", type="primary")
+        col1, col2 = st.columns([1, 1])
+        with col1:
+            draft_button = st.form_submit_button("💾 Save Draft", use_container_width=True)
+        with col2:
+            submitted = st.form_submit_button("🚀 Submit Review", type="primary", use_container_width=True)
         
         if submitted:
             if all([employee_name, reviewer_name, review_period, department, final_rating, kpis, strengths, improvements]):
@@ -698,6 +793,9 @@ def show_performance_review_form():
                 st.balloons()
             else:
                 st.error("❌ Please fill in all required fields marked with *")
+        
+        if draft_button:
+            st.info("💾 Draft saved successfully!")
 
 def main():
     """Main application logic"""
@@ -723,25 +821,30 @@ def main():
     
     # Main content area
     if st.session_state.current_page == 'dashboard':
+        st.markdown('<div class="dashboard-view">', unsafe_allow_html=True)
         show_dashboard()
-    elif st.session_state.current_page == 'new_hire':
-        show_new_hire_form()
-    elif st.session_state.current_page == 'customer_creation':
-        show_customer_creation_form()
-    elif st.session_state.current_page == 'po_request':
-        show_po_request_form()
-    elif st.session_state.current_page == 'invoice_processing':
-        show_invoice_processing_form()
-    elif st.session_state.current_page == 'expense_report':
-        show_expense_report_form()
-    elif st.session_state.current_page == 'leave_request':
-        show_leave_request_form()
-    elif st.session_state.current_page == 'asset_management':
-        show_asset_management_form()
-    elif st.session_state.current_page == 'contract_review':
-        show_contract_review_form()
-    elif st.session_state.current_page == 'performance_review':
-        show_performance_review_form()
+        st.markdown('</div>', unsafe_allow_html=True)
+    else:
+        st.markdown('<div class="form-view">', unsafe_allow_html=True)
+        if st.session_state.current_page == 'new_hire':
+            show_new_hire_form()
+        elif st.session_state.current_page == 'customer_creation':
+            show_customer_creation_form()
+        elif st.session_state.current_page == 'po_request':
+            show_po_request_form()
+        elif st.session_state.current_page == 'invoice_processing':
+            show_invoice_processing_form()
+        elif st.session_state.current_page == 'expense_report':
+            show_expense_report_form()
+        elif st.session_state.current_page == 'leave_request':
+            show_leave_request_form()
+        elif st.session_state.current_page == 'asset_management':
+            show_asset_management_form()
+        elif st.session_state.current_page == 'contract_review':
+            show_contract_review_form()
+        elif st.session_state.current_page == 'performance_review':
+            show_performance_review_form()
+        st.markdown('</div>', unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
