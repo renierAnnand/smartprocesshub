@@ -11,58 +11,113 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Custom CSS for modern styling
+# Custom CSS for modern styling with larger cards
 st.markdown("""
 <style>
     .main-header {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 2rem;
-        border-radius: 10px;
+        padding: 3rem;
+        border-radius: 15px;
         color: white;
         text-align: center;
+        margin-bottom: 3rem;
+    }
+    
+    .main-header h1 {
+        font-size: 2.5rem;
+        font-weight: 300;
+        margin-bottom: 0.5rem;
+    }
+    
+    .main-header p {
+        font-size: 1.2rem;
+        opacity: 0.9;
+    }
+    
+    /* Large process card styling */
+    .process-card-container {
         margin-bottom: 2rem;
     }
     
-    .process-card {
+    .stButton > button {
+        width: 100%;
+        height: auto;
+        min-height: 200px;
         background: white;
-        padding: 1.5rem;
-        border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        color: #2d3748;
         border: 1px solid #e2e8f0;
-        margin-bottom: 1rem;
-        transition: transform 0.2s;
-        cursor: pointer;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        text-align: left;
+        position: relative;
+        overflow: hidden;
     }
     
-    .process-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+    .stButton > button:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        border-color: #667eea;
+    }
+    
+    .stButton > button:focus {
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        border-color: #667eea;
+    }
+    
+    /* Card content styling */
+    .card-content {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        width: 100%;
     }
     
     .card-icon {
-        font-size: 2rem;
-        margin-bottom: 0.5rem;
+        width: 60px;
+        height: 60px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        margin-bottom: 20px;
+        color: white;
     }
     
+    .icon-blue { background: linear-gradient(135deg, #667eea, #764ba2); }
+    .icon-green { background: linear-gradient(135deg, #48bb78, #38a169); }
+    .icon-purple { background: linear-gradient(135deg, #9f7aea, #805ad5); }
+    .icon-orange { background: linear-gradient(135deg, #ed8936, #dd6b20); }
+    .icon-teal { background: linear-gradient(135deg, #4fd1c7, #38b2ac); }
+    .icon-red { background: linear-gradient(135deg, #f56565, #e53e3e); }
+    
     .card-title {
-        font-size: 1.2rem;
+        font-size: 1.4rem;
         font-weight: 600;
         color: #2d3748;
-        margin-bottom: 0.5rem;
+        margin-bottom: 10px;
+        line-height: 1.2;
     }
     
     .card-description {
         color: #718096;
-        font-size: 0.9rem;
-        margin-bottom: 1rem;
+        font-size: 1rem;
+        line-height: 1.6;
+        margin-bottom: 20px;
+        flex-grow: 1;
     }
     
     .status-badge {
-        padding: 0.25rem 0.75rem;
-        border-radius: 15px;
-        font-size: 0.75rem;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
         font-weight: 500;
         text-transform: uppercase;
+        letter-spacing: 0.5px;
+        align-self: flex-start;
     }
     
     .status-active {
@@ -83,21 +138,36 @@ st.markdown("""
     .form-container {
         background: white;
         padding: 2rem;
-        border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    
-    .stButton > button {
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        color: white;
-        border: none;
-        border-radius: 5px;
-        padding: 0.5rem 1rem;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
     }
     
     .back-button {
-        background: #6c757d !important;
+        background: linear-gradient(135deg, #667eea, #764ba2) !important;
         color: white !important;
+        border: none !important;
+        border-radius: 8px !important;
+        padding: 10px 20px !important;
+        margin-bottom: 20px !important;
+    }
+    
+    /* Form button styling */
+    .stButton > button[kind="primary"] {
+        background: linear-gradient(135deg, #667eea, #764ba2) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 8px !important;
+    }
+    
+    /* Regular button styling for form navigation */
+    .stButton > button {
+        border-radius: 8px !important;
+        transition: all 0.2s ease !important;
+    }
+    
+    .stButton > button:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -107,64 +177,145 @@ if 'current_page' not in st.session_state:
     st.session_state.current_page = 'dashboard'
 
 def show_dashboard():
-    """Display the main dashboard with process cards"""
+    """Display the main dashboard with large process cards"""
     
     # Header
     st.markdown("""
     <div class="main-header">
-        <h1>🏢 Business Process Dashboard</h1>
+        <h1>Business Process Dashboard</h1>
         <p>Select a process to get started</p>
     </div>
     """, unsafe_allow_html=True)
     
-    # Process cards in a grid layout
-    col1, col2, col3 = st.columns(3)
+    # Create larger cards using containers and HTML
+    col1, col2, col3 = st.columns(3, gap="large")
     
     # Row 1
     with col1:
-        if st.button("👤 New Hire", key="new_hire", help="Employee onboarding process"):
+        card_html = """
+        <div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; margin-bottom: 2rem; min-height: 200px; cursor: pointer; transition: all 0.3s;">
+            <div style="width: 60px; height: 60px; border-radius: 12px; background: linear-gradient(135deg, #667eea, #764ba2); display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px; color: white;">👤</div>
+            <h3 style="font-size: 1.4rem; font-weight: 600; color: #2d3748; margin-bottom: 10px;">New Hire</h3>
+            <p style="color: #718096; font-size: 1rem; line-height: 1.6; margin-bottom: 20px;">Streamline employee onboarding with automated workflows and document collection.</p>
+            <span style="padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; background: #c6f6d5; color: #22543d;">ACTIVE</span>
+        </div>
+        """
+        st.markdown(card_html, unsafe_allow_html=True)
+        if st.button("Open New Hire Form", key="new_hire", use_container_width=True):
             st.session_state.current_page = 'new_hire'
             st.rerun()
     
     with col2:
-        if st.button("🏢 Customer Creation", key="customer_creation", help="Register new customers"):
+        card_html = """
+        <div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; margin-bottom: 2rem; min-height: 200px; cursor: pointer; transition: all 0.3s;">
+            <div style="width: 60px; height: 60px; border-radius: 12px; background: linear-gradient(135deg, #48bb78, #38a169); display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px; color: white;">🏢</div>
+            <h3 style="font-size: 1.4rem; font-weight: 600; color: #2d3748; margin-bottom: 10px;">Customer Creation</h3>
+            <p style="color: #718096; font-size: 1rem; line-height: 1.6; margin-bottom: 20px;">Register new customers with comprehensive profile setup and verification.</p>
+            <span style="padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; background: #c6f6d5; color: #22543d;">ACTIVE</span>
+        </div>
+        """
+        st.markdown(card_html, unsafe_allow_html=True)
+        if st.button("Open Customer Creation Form", key="customer_creation", use_container_width=True):
             st.session_state.current_page = 'customer_creation'
             st.rerun()
     
     with col3:
-        if st.button("📋 PO Request", key="po_request", help="Purchase order requests"):
+        card_html = """
+        <div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; margin-bottom: 2rem; min-height: 200px; cursor: pointer; transition: all 0.3s;">
+            <div style="width: 60px; height: 60px; border-radius: 12px; background: linear-gradient(135deg, #9f7aea, #805ad5); display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px; color: white;">📋</div>
+            <h3 style="font-size: 1.4rem; font-weight: 600; color: #2d3748; margin-bottom: 10px;">PO Request</h3>
+            <p style="color: #718096; font-size: 1rem; line-height: 1.6; margin-bottom: 20px;">Submit and track purchase order requests with approval workflow.</p>
+            <span style="padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; background: #c6f6d5; color: #22543d;">ACTIVE</span>
+        </div>
+        """
+        st.markdown(card_html, unsafe_allow_html=True)
+        if st.button("Open PO Request Form", key="po_request", use_container_width=True):
             st.session_state.current_page = 'po_request'
             st.rerun()
     
     # Row 2
     with col1:
-        if st.button("💰 Invoice Processing", key="invoice_processing", help="Invoice validation and processing"):
+        card_html = """
+        <div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; margin-bottom: 2rem; min-height: 200px; cursor: pointer; transition: all 0.3s;">
+            <div style="width: 60px; height: 60px; border-radius: 12px; background: linear-gradient(135deg, #ed8936, #dd6b20); display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px; color: white;">💰</div>
+            <h3 style="font-size: 1.4rem; font-weight: 600; color: #2d3748; margin-bottom: 10px;">Invoice Processing</h3>
+            <p style="color: #718096; font-size: 1rem; line-height: 1.6; margin-bottom: 20px;">Automate invoice validation, approval, and payment processing.</p>
+            <span style="padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; background: #fed7d7; color: #742a2a;">BETA</span>
+        </div>
+        """
+        st.markdown(card_html, unsafe_allow_html=True)
+        if st.button("Open Invoice Processing Form", key="invoice_processing", use_container_width=True):
             st.session_state.current_page = 'invoice_processing'
             st.rerun()
     
     with col2:
-        if st.button("💳 Expense Report", key="expense_report", help="Expense claims and reimbursements"):
+        card_html = """
+        <div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; margin-bottom: 2rem; min-height: 200px; cursor: pointer; transition: all 0.3s;">
+            <div style="width: 60px; height: 60px; border-radius: 12px; background: linear-gradient(135deg, #4fd1c7, #38b2ac); display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px; color: white;">💳</div>
+            <h3 style="font-size: 1.4rem; font-weight: 600; color: #2d3748; margin-bottom: 10px;">Expense Report</h3>
+            <p style="color: #718096; font-size: 1rem; line-height: 1.6; margin-bottom: 20px;">Submit and manage expense claims with receipt attachment and approval flow.</p>
+            <span style="padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; background: #c6f6d5; color: #22543d;">ACTIVE</span>
+        </div>
+        """
+        st.markdown(card_html, unsafe_allow_html=True)
+        if st.button("Open Expense Report Form", key="expense_report", use_container_width=True):
             st.session_state.current_page = 'expense_report'
             st.rerun()
     
     with col3:
-        if st.button("🏖️ Leave Request", key="leave_request", help="Time off requests"):
+        card_html = """
+        <div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; margin-bottom: 2rem; min-height: 200px; cursor: pointer; transition: all 0.3s;">
+            <div style="width: 60px; height: 60px; border-radius: 12px; background: linear-gradient(135deg, #f56565, #e53e3e); display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px; color: white;">🏖️</div>
+            <h3 style="font-size: 1.4rem; font-weight: 600; color: #2d3748; margin-bottom: 10px;">Leave Request</h3>
+            <p style="color: #718096; font-size: 1rem; line-height: 1.6; margin-bottom: 20px;">Request time off with calendar integration and manager approval workflow.</p>
+            <span style="padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; background: #c6f6d5; color: #22543d;">ACTIVE</span>
+        </div>
+        """
+        st.markdown(card_html, unsafe_allow_html=True)
+        if st.button("Open Leave Request Form", key="leave_request", use_container_width=True):
             st.session_state.current_page = 'leave_request'
             st.rerun()
     
     # Row 3
     with col1:
-        if st.button("🖥️ Asset Management", key="asset_management", help="Company asset tracking"):
+        card_html = """
+        <div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; margin-bottom: 2rem; min-height: 200px; cursor: pointer; transition: all 0.3s;">
+            <div style="width: 60px; height: 60px; border-radius: 12px; background: linear-gradient(135deg, #667eea, #764ba2); display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px; color: white;">🖥️</div>
+            <h3 style="font-size: 1.4rem; font-weight: 600; color: #2d3748; margin-bottom: 10px;">Asset Management</h3>
+            <p style="color: #718096; font-size: 1rem; line-height: 1.6; margin-bottom: 20px;">Track and manage company assets with assignment and maintenance schedules.</p>
+            <span style="padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; background: #bee3f8; color: #2a4365;">NEW</span>
+        </div>
+        """
+        st.markdown(card_html, unsafe_allow_html=True)
+        if st.button("Open Asset Management Form", key="asset_management", use_container_width=True):
             st.session_state.current_page = 'asset_management'
             st.rerun()
     
     with col2:
-        if st.button("📄 Contract Review", key="contract_review", help="Legal contract processing"):
+        card_html = """
+        <div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; margin-bottom: 2rem; min-height: 200px; cursor: pointer; transition: all 0.3s;">
+            <div style="width: 60px; height: 60px; border-radius: 12px; background: linear-gradient(135deg, #48bb78, #38a169); display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px; color: white;">📄</div>
+            <h3 style="font-size: 1.4rem; font-weight: 600; color: #2d3748; margin-bottom: 10px;">Contract Review</h3>
+            <p style="color: #718096; font-size: 1rem; line-height: 1.6; margin-bottom: 20px;">Submit contracts for legal review with collaborative editing and approval.</p>
+            <span style="padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; background: #fed7d7; color: #742a2a;">BETA</span>
+        </div>
+        """
+        st.markdown(card_html, unsafe_allow_html=True)
+        if st.button("Open Contract Review Form", key="contract_review", use_container_width=True):
             st.session_state.current_page = 'contract_review'
             st.rerun()
     
     with col3:
-        if st.button("⭐ Performance Review", key="performance_review", help="Employee evaluations"):
+        card_html = """
+        <div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; margin-bottom: 2rem; min-height: 200px; cursor: pointer; transition: all 0.3s;">
+            <div style="width: 60px; height: 60px; border-radius: 12px; background: linear-gradient(135deg, #9f7aea, #805ad5); display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px; color: white;">⭐</div>
+            <h3 style="font-size: 1.4rem; font-weight: 600; color: #2d3748; margin-bottom: 10px;">Performance Review</h3>
+            <p style="color: #718096; font-size: 1rem; line-height: 1.6; margin-bottom: 20px;">Conduct employee performance evaluations with 360-degree feedback collection.</p>
+            <span style="padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; background: #bee3f8; color: #2a4365;">NEW</span>
+        </div>
+        """
+        st.markdown(card_html, unsafe_allow_html=True)
+        if st.button("Open Performance Review Form", key="performance_review", use_container_width=True):
             st.session_state.current_page = 'performance_review'
             st.rerun()
 
@@ -172,9 +323,11 @@ def show_new_hire_form():
     """New Hire process form"""
     st.markdown("## 👤 New Hire Process")
     
-    if st.button("← Back to Dashboard", key="back_new_hire"):
-        st.session_state.current_page = 'dashboard'
-        st.rerun()
+    col1, col2 = st.columns([1, 6])
+    with col1:
+        if st.button("← Back", key="back_new_hire", help="Return to Dashboard"):
+            st.session_state.current_page = 'dashboard'
+            st.rerun()
     
     with st.form("new_hire_form"):
         col1, col2 = st.columns(2)
@@ -194,7 +347,7 @@ def show_new_hire_form():
             work_location = st.text_input("Work Location *", key="nh_location")
             manager = st.text_input("Manager *", key="nh_manager")
         
-        st.subheader("Attachments")
+        st.markdown("### 📎 Attachments")
         col1, col2, col3 = st.columns(3)
         with col1:
             id_document = st.file_uploader("ID Document *", type=['pdf', 'jpg', 'png'], key="nh_id")
@@ -203,7 +356,11 @@ def show_new_hire_form():
         with col3:
             offer_letter = st.file_uploader("Offer Letter *", type=['pdf', 'doc', 'docx'], key="nh_offer")
         
-        submitted = st.form_submit_button("Submit New Hire Request", type="primary")
+        col1, col2 = st.columns([1, 1])
+        with col1:
+            draft_button = st.form_submit_button("💾 Save Draft", use_container_width=True)
+        with col2:
+            submitted = st.form_submit_button("🚀 Submit Request", type="primary", use_container_width=True)
         
         if submitted:
             if all([full_name, national_id, dob, job_title, department, joining_date, salary_grade, work_location, manager]):
@@ -211,14 +368,19 @@ def show_new_hire_form():
                 st.balloons()
             else:
                 st.error("❌ Please fill in all required fields marked with *")
+        
+        if draft_button:
+            st.info("💾 Draft saved successfully!")
 
 def show_customer_creation_form():
     """Customer Creation process form"""
     st.markdown("## 🏢 Customer Creation")
     
-    if st.button("← Back to Dashboard", key="back_customer"):
-        st.session_state.current_page = 'dashboard'
-        st.rerun()
+    col1, col2 = st.columns([1, 6])
+    with col1:
+        if st.button("← Back", key="back_customer", help="Return to Dashboard"):
+            st.session_state.current_page = 'dashboard'
+            st.rerun()
     
     with st.form("customer_creation_form"):
         col1, col2 = st.columns(2)
@@ -241,14 +403,18 @@ def show_customer_creation_form():
         
         address = st.text_area("Address *", key="cc_address")
         
-        st.subheader("Attachments")
+        st.markdown("### 📎 Attachments")
         col1, col2 = st.columns(2)
         with col1:
             commercial_reg = st.file_uploader("Commercial Registration *", type=['pdf', 'jpg', 'png'], key="cc_reg")
         with col2:
             tax_cert = st.file_uploader("Tax Certificate *", type=['pdf', 'jpg', 'png'], key="cc_tax")
         
-        submitted = st.form_submit_button("Submit Customer Creation", type="primary")
+        col1, col2 = st.columns([1, 1])
+        with col1:
+            draft_button = st.form_submit_button("💾 Save Draft", use_container_width=True)
+        with col2:
+            submitted = st.form_submit_button("🚀 Submit Request", type="primary", use_container_width=True)
         
         if submitted:
             if all([company_name, vat_id, industry, contact_name, contact_email, contact_phone, payment_terms, address]):
@@ -256,6 +422,9 @@ def show_customer_creation_form():
                 st.balloons()
             else:
                 st.error("❌ Please fill in all required fields marked with *")
+        
+        if draft_button:
+            st.info("💾 Draft saved successfully!")
 
 def show_po_request_form():
     """PO Request process form"""
